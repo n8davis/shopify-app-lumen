@@ -1,0 +1,8 @@
+/.env
+/.htaccess
+/node_modules
+/vendor
+/composer.lock
+Homestead.json
+Homestead.yaml
+
