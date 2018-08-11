@@ -8,7 +8,6 @@
 
 namespace App\Skeleton\Shopify;
 
-use Dotenv\Dotenv;
 use App\Skeleton\Basic\Assist;
 use App\Skeleton\Basic\Client;
 
@@ -38,8 +37,6 @@ class Auth
     {
 
         if( self::verifyShopifyRequest() ) {
-            $env = new Dotenv( dirname( dirname( dirname( __DIR__ ) ) ) . DIRECTORY_SEPARATOR  ) ;
-            $env->load();
             $data = array(
                 'client_id'     => env( 'SHOPIFY_KEY' ) ,
                 'client_secret' => env( 'SHOPIFY_SECRET' ) ,
@@ -114,8 +111,6 @@ class Auth
      */
     public static function verify()
     {
-        $env = new Dotenv( dirname( dirname( dirname( __DIR__ ) ) ) . DIRECTORY_SEPARATOR  ) ;
-        $env->load();
         $secret = env( 'SHOPIFY_SECRET' );
 
         if (  is_null( $secret ) ) throw new \Exception('Shopify Config not set');
@@ -139,8 +134,6 @@ class Auth
     }
 
     public static function verifyWebhook( $data , $hmac_header ){
-        $env = new Dotenv( dirname( dirname( __DIR__ ) ) );
-        $env->load();
         $calculated_hmac = base64_encode(hash_hmac('sha256', $data, env( 'SHOPIFY_SECRET' ), true));
         return ($hmac_header == $calculated_hmac);
     }

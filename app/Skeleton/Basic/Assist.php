@@ -8,8 +8,6 @@
 
 namespace App\Skeleton\Basic;
 
-use Dotenv\Dotenv;
-
 class Assist
 {
 
@@ -20,8 +18,7 @@ class Assist
      * @return bool|null
      */
     public static function email( $subject , $message , array $emails ){
-        $env = new Dotenv( dirname( dirname( __DIR__ ) ) . DIRECTORY_SEPARATOR ) ;
-        $env->load();
+
         $headers = [
             "From: " . env( 'MY_EMAIL' ),
             "Reply-To: " . env( 'MY_EMAIL' )

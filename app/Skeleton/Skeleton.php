@@ -7,8 +7,7 @@
  */
 
 namespace App\Skeleton;
-use Dotenv\Dotenv;
-use Skeleton\Shopify\Auth;
+use App\Skeleton\Shopify\Auth;
 
 class Skeleton
 {
@@ -20,8 +19,6 @@ class Skeleton
 
     function __construct( $shop )
     {
-        $dotenv = new Dotenv( dirname( __DIR__ ) );
-        $dotenv->load();
 
         $this->setShop( $shop );
         $this->setAppApiKey( env('SHOPIFY_KEY') );
