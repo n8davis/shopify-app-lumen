@@ -26,20 +26,22 @@
     Vue.use(Card);
     Vue.use(Button);
     Vue.use(Router);
-let shop = 'n8davis.myshopiyf.com';
+
     export default {
         data(){
             return{
-                data:{}
+                data:{
+                    shop : getUrlName( 'shop' , window.location.href )
+                }
             }
         },
         methods:{
             shopifyInit: function( vm ){
                 axios({
                     method: 'POST',
-                    headers: {'x-skeleton-app-header': shop },
+                    headers: {'x-skeleton-app-header': vm.shop },
                     data: JSON.stringify([]),
-                    url : url + 'shops/access?shop=' + shop ,
+                    url : url + 'shops/access?shop=' + vm.shop ,
                 })
                 .then(function (response) {
                     let token = response.data;
@@ -47,13 +49,13 @@ let shop = 'n8davis.myshopiyf.com';
                         secondary: [
                             {
                                 label: "Home",
-                                callback: function(){ vm.$router.push( { name: 'Home' , params:{shop:shop}} ) }
+                                callback: function(){ vm.$router.push( { name: 'Home' , params:{shop:vm.shop}} ) }
                             },
                         ]
                     };
                     ShopifyApp.init({
                         apiKey: token,
-                        shopOrigin: "https://" + shop,
+                        shopOrigin: "https://" + vm.shop,
                         debug: false,
                         forceRedirect: true
                     });
