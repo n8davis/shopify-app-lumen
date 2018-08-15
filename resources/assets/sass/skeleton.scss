@@ -59,8 +59,30 @@ $pointer : pointer;
 
 $inherit : inherit;
 
+$oneEm   : 1em;
+$twoEm   : 2em;
+$threeEm : 3em;
+
+$right : right;
+
 
 html,
 body{
   background-color: $inherit !important;
+}
+
+.margin-bottom-1{
+  margin-bottom: $oneEm;
+}
+.margin-top3{
+  margin-top: $threeEm;
+}
+
+.pull-right{
+  float:$right;
+}
+.skeleton-card{
+  background-color: $white;
+  padding: $twoEm;
+  box-shadow: 2px 7px 13px 7px #cecece;
 }

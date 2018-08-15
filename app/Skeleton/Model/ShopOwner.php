@@ -15,4 +15,6 @@ class ShopOwner extends Model
 {
 
     protected $fillable = [ 'shop' , 'access_token' , 'key' , 'timezone' , 'email' ];
+
+    // todo set belongs to for all tables ...
 }

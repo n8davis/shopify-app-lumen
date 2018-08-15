@@ -20,7 +20,7 @@ abstract class Shopify
     protected $errors;
     protected $results;
 
-    CONST EVENT_ONLOAD       = 'onload'; // Currently, "onload" is the only supported event.
+    CONST EVENT_ONLOAD       = 'onload';
     CONST SCOPE_ONLINE_STORE = 'online_store';
     CONST SCOPE_ORDER_STATUS = 'order_status';
     CONST SCOPE_ALL          = 'all';

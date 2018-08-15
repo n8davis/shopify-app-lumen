@@ -9,7 +9,7 @@
 namespace App\Skeleton\Shopify;
 
 
-class Webhooks extends Shopify
+class Webhook extends Shopify
 {
 
     const SINGULAR_NAME = 'webhook';
@@ -39,7 +39,7 @@ class Webhooks extends Shopify
 
     /**
      * @param mixed $topic
-     * @return Webhooks
+     * @return Webhook
      */
     public function setTopic($topic)
     {
@@ -57,7 +57,7 @@ class Webhooks extends Shopify
 
     /**
      * @param mixed $address
-     * @return Webhooks
+     * @return Webhook
      */
     public function setAddress($address)
     {
@@ -75,7 +75,7 @@ class Webhooks extends Shopify
 
     /**
      * @param mixed $format
-     * @return Webhooks
+     * @return Webhook
      */
     public function setFormat($format)
     {

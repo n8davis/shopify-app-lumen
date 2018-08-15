@@ -9,15 +9,16 @@
 namespace App\Http\Controllers;
 
 use \App\Skeleton\Basic\Assist;
+use App\Skeleton\Model\Cron;
 use \App\Skeleton\Model\ShopOwner;
 use \App\Skeleton\Security;
 use \App\Skeleton\Shopify\Auth;
 use \App\Skeleton\Shopify\Shop;
-use \App\Skeleton\Shopify\Webhooks;
+use \App\Skeleton\Shopify\Webhook;
 use \App\Skeleton\Skeleton;
 use Illuminate\Http\Response;
 
-class ShopifyController
+class ShopifyController extends Controller
 {
 
     /**
@@ -74,22 +75,21 @@ class ShopifyController
 
         $storeInfo = $shopifyStore->find();
 
-        ShopOwner::firstOrCreate([
-            "shop"             => $currentShop,
-            "access_token"     => $accessToken ,
-            'key'              => $shop_key ,
-            'timezone'         => $storeInfo->getIanaTimezone(),
-            'email'            => $storeInfo->getEmail()
-        ]);
+        // save shop
+        $shopOwner = new ShopOwner();
+        $shopOwner->shop = $currentShop;
+        $shopOwner->access_token = $accessToken ;
+        $shopOwner->key = $shop_key ;
+        $shopOwner->timezone = $storeInfo->getIanaTimezone();
+        $shopOwner->email = $storeInfo->getEmail();
 
-        // create webhooks
-        foreach ( $skeleton->webhookTopics() as $topic ) {
-            $webhook = new Webhooks();
-            $webhook->setShop( $currentShop )->setAccessToken( $accessToken );
-            $webhook->setTopic( $topic )
-                ->setAddress( Skeleton::baseUrl() . 'webhook' )
-                ->setFormat( 'json' )
-                ->insert();
+        // create background processes
+        foreach( Cron::installProcesses() as $type ){
+            $cron = new Cron();
+            $cron->type = $type;
+            $cron->shop_owner_id = $shopOwner->id;
+            $cron->status = Cron::STATUS_PENDING;
+            $cron->save();
         }
 
         $redirectTo = 'https://' . $currentShop . '/admin/apps/' . $appHandle . '/';

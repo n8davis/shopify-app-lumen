@@ -9,16 +9,26 @@
 namespace App\Http\Controllers;
 
 
-class ShopController
+use App\Skeleton\Model\ShopOwner;
+use Illuminate\Http\Request;
+
+class ShopController extends Controller
 {
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param \Illuminate\Http\Response $response
-     * @var ShopOwner $shopOwner
-     * @return mixed
+     * @param Request $request
+     * @return string
      */
-    public function access( \Illuminate\Http\Request $request , $response )
+    public function access( Request $request )
     {
-        return json_encode( $request->input() ) ;
+        $shop = $request->input( 'shop' );
+
+        if( strlen( $shop ) === 0 ) return json_encode( [] );
+
+        $shopOwner = new ShopOwner();
+        $shopOwner = $shopOwner->where( 'shop' , $shop )->first();
+
+        if( ! isset( $shopOwner ) ) return json_encode( [] );
+
+        return json_encode( $shopOwner->access_token );
     }
 }

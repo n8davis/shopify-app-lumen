@@ -8,6 +8,7 @@
 
 namespace App\Skeleton\Shopify;
 
+use Dotenv\Dotenv;
 use App\Skeleton\Basic\Assist;
 use App\Skeleton\Basic\Client;
 
@@ -37,9 +38,11 @@ class Auth
     {
 
         if( self::verifyShopifyRequest() ) {
+            $env = new Dotenv( dirname( dirname( __DIR__ ) ) . DIRECTORY_SEPARATOR ) ;
+            $env->load();
             $data = array(
-                'client_id'     => env( 'SHOPIFY_KEY' ) ,
-                'client_secret' => env( 'SHOPIFY_SECRET' ) ,
+                'client_id'     => getenv( 'SHOPIFY_KEY' ) ,
+                'client_secret' => getenv( 'SHOPIFY_SECRET' ) ,
                 'code'          => $_GET['code'],
             );
 
@@ -111,10 +114,9 @@ class Auth
      */
     public static function verify()
     {
-        $secret = env( 'SHOPIFY_SECRET' );
-
-        if (  is_null( $secret ) ) throw new \Exception('Shopify Config not set');
-
+        if (  is_null( self::$secret  ) && is_null( self::$access_token) ){
+            throw new \Exception('Shopify Config not set');
+        }
         $data   = $_GET;
         $params = array();
 
@@ -127,14 +129,16 @@ class Auth
         asort($params);
         $params = implode('&', $params);
 
-        $hmac           = array_key_exists( 'hmac' , $data ) ? $data['hmac'] : null ;
-        $calculatedHmac = hash_hmac('sha256', $params,  $secret );
+        $hmac           = $data['hmac'];
+        $calculatedHmac = hash_hmac('sha256', $params,  self::$secret );
 
         return ($hmac == $calculatedHmac);
     }
 
     public static function verifyWebhook( $data , $hmac_header ){
-        $calculated_hmac = base64_encode(hash_hmac('sha256', $data, env( 'SHOPIFY_SECRET' ), true));
+        $env = new Dotenv( dirname( dirname( __DIR__ ) ) );
+        $env->load();
+        $calculated_hmac = base64_encode(hash_hmac('sha256', $data, getenv( 'SHOPIFY_SECRET' ), true));
         return ($hmac_header == $calculated_hmac);
     }
 }
